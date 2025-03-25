@@ -14,6 +14,7 @@ import { EmptyRouteComponent } from './app/empty-route/empty-route.component';
 
 // import { environment } from './environments/environment';
 import { singleSpaPropsSubject } from './single-spa/single-spa-props';
+import { appConfig } from './app/app.config';
 
 // if (environment.production) {
 //   enableProdMode();
@@ -28,10 +29,7 @@ const lifecycles = singleSpaAngular({
       providers: [
         { provide: APP_BASE_HREF, useValue: '/' },
         getSingleSpaExtraProviders(),
-        provideRouter([
-          { path: '', component: AppComponent, },
-          { path: '**', component: EmptyRouteComponent, },
-        ]),
+        ...appConfig.providers!,
       ],
     });
   },

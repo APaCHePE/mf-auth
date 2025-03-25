@@ -1,0 +1,72 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f7fa, #80deea);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #00796b;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  input {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    transition: border-color 0.2s;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      border-color: #00796b;
+    }
+  }
+
+  button {
+    padding: 0.75rem;
+    border: none;
+    background-color: #00796b;
+    color: white;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #004d40;
+    }
+
+    &:disabled {
+      background-color: #b2dfdb;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Media Queries para desktop
+@media (min-width: 768px) {
+  form {
+    padding: 3rem;
+    max-width: 450px;
+  }
+}
