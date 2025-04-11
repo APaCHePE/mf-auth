@@ -1,1 +1,11 @@
-<router-outlet></router-outlet>
+<!-- <app-navbar *ngIf="showNavbar"></app-navbar>
+<app-sidebar *ngIf="showSidebar"></app-sidebar> -->
+<!-- <router-outlet ></router-outlet> -->
+<div id="layout-app">
+
+  <app-login *ngIf="!userAutenticado" (loginSuccess)="updateUserStatus(true)"></app-login>
+  <app-header *ngIf="userAutenticado"></app-header>
+
+    <router-outlet *ngIf="userAutenticado"></router-outlet>
+
+</div>

@@ -1,0 +1,9 @@
+<div id="header" class="clearfix">
+  <header class="w-full h-16 bg-primary flex items-center justify-between px-6 text-white shadow-md">
+    <div class="text-lg font-bold">Sistema Interno</div>
+    <p-megamenu [model]="model" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu>
+    <button pButton type="button" icon="pi pi-power-off" (click)="logout()" class="p-button-sm" iconPos="left"></button>
+  </header>
+
+  <router-outlet></router-outlet>
+</div>

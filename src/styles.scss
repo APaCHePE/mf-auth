@@ -1,13 +1,11 @@
 // @import './tailwind.css';
-// @import "primeicons/primeicons.css";
-@use 'primeicons/primeicons.css';
-// @use './assets/fonts/primeicons.css';
+@use './tailwind.css';
 @use './assets/ultima/layout.scss';
+@use 'primeicons/primeicons.css';
+
+
+// @use './assets/fonts/primeicons.css';
+// @use "tailwindcss";
 
 // @import 'primeng/resources/themes/lara-light-blue/theme.css';
 // @import 'primeng/resources/primeng.css';
-
-
-// @import 'tailwindcss/base';
-// @import 'tailwindcss/components';
-// @import 'tailwindcss/utilities';  

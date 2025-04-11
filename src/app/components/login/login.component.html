@@ -1,0 +1,29 @@
+<div class="h-screen flex w-full bg-surface-50 dark:bg-surface-950">
+  <div class="flex flex-1 flex-col items-center justify-cente">
+    <div class="w-11/12 sm:w-[30rem]">
+      <p-card header="Sistema Intranet" subheader="Iniciar sesión" [style]="{ width: '460px' }">
+
+        <ng-template pTemplate="header">
+          <p-messages></p-messages>
+        </ng-template>
+
+        <div class="card flex  flex-column md:justify-content-between col-gap-2 align-middle gap-3 mt-3">
+          <input type="email" pInputText [(ngModel)]="email" placeholder="Correo electrónico" />
+          <input type="password" pInputText [(ngModel)]="password" placeholder="Contraseña" />
+        </div>
+
+        <ng-template pTemplate="footer">
+          <div class="card flex justify-content-center">
+            <button pButton type="button" styleClass="p-button-secondary" (click)="login()" label="Ingresar"></button>
+
+          </div>
+
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+  <div [style.backgroundImage]="'url(http://localhost:1000/images/pages/accessDenied-bg.jpg)'"
+    class="hidden lg:flex flex-1 items-center justify-center bg-cover bg-center">
+    <img src="http://localhost:1000/layout/images/logo/vector_logo.png" alt="Logo" />
+  </div>
+</div>

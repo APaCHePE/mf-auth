@@ -1,16 +1,10 @@
-import { enableProdMode, NgZone } from '@angular/core';
+import { NgZone } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { Router, NavigationStart, provideRouter } from '@angular/router';
+import { singleSpaAngular } from 'single-spa-angular';
 
-import { singleSpaAngular, getSingleSpaExtraProviders } from 'single-spa-angular';
-
-
-// import { AppModule } from './app/app.module';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { APP_BASE_HREF } from '@angular/common';
-import { EmptyRouteComponent } from './app/empty-route/empty-route.component';
 
 // import { environment } from './environments/environment';
 import { singleSpaPropsSubject } from './single-spa/single-spa-props';
@@ -19,21 +13,14 @@ import { appConfig } from './app/app.config';
 // if (environment.production) {
 //   enableProdMode();
 // }
-console.log('✅ Entrando a main.single-spa.ts');
+
 const lifecycles = singleSpaAngular({
   bootstrapFunction: (singleSpaProps) => {
     console.log('✅ Ejecutando bootstrapFunction', singleSpaProps);
     singleSpaPropsSubject.next(singleSpaProps);
-    // return platformBrowserDynamic(getSingleSpaExtraProviders()).bootstrapModule(AppComponent);
-    return bootstrapApplication(AppComponent, {
-      providers: [
-        { provide: APP_BASE_HREF, useValue: '/' },
-        getSingleSpaExtraProviders(),
-        ...appConfig.providers!,
-      ],
-    });
+    return bootstrapApplication(AppComponent, appConfig);
   },
-  template: '<app-root />',
+  template: '<app-layout />',
   Router,
   NavigationStart,
   NgZone,

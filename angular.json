@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "login": {
+    "mf-authentication": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/login",
+            "outputPath": "dist/mf-authentication",
             "index": "src/index.html",
             "main": "src/main.single-spa.ts",
             "polyfills": [
@@ -39,7 +39,7 @@
             "scripts": [],
             "customWebpackConfig": {
               "path": "extra-webpack.config.js",
-              "libraryName": "login",
+              "libraryName": "mf-authentication",
               "libraryTarget": "umd"
             },
             "deployUrl": "http://localhost:1000/"
@@ -76,10 +76,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "login:build:production"
+              "buildTarget": "mf-authentication:build:production"
             },
             "development": {
-              "buildTarget": "login:build:development"
+              "buildTarget": "mf-authentication:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -104,74 +104,6 @@
               "src/styles.scss"
             ],
             "scripts": []
-          }
-        }
-      }
-    },
-    "login-standalone": {
-      "projectType": "application",
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/login-standalone",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
-            "polyfills": [
-              "zone.js"
-            ],
-            "inlineStyleLanguage": "scss",
-            "assets": [{
-              "glob": "**/*",
-              "input": "public"
-            }],
-            "styles": [
-              "node_modules/primeicons/primeicons.css",
-              "src/styles.scss"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": ["src"]
-            },
-            "scripts": []
-          },
-          "configurations": {
-            "standalone": {
-              "main": "src/main.ts"
-            },
-            "production": {
-              "optimization": true,
-              "sourceMap": false,
-              "extractLicenses": true,
-              "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "outputHashing": "none"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "login-standalone:build"
-          },
-          "configurations": {
-            "standalone": {
-              "buildTarget": "login:build:standalone"
-            },
-            "production": {
-              "browserTarget": "login-standalone:build:production"
-            },
-            "development": {
-              "browserTarget": "login-standalone:build:development"
-            }
           }
         }
       }
