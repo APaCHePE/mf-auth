@@ -36,7 +36,7 @@ export class LoginComponent {
     this.messageService.clear();
     try {
       sessionStorage.setItem("idTokenFirebase", "SADJNASsnajsdnajsnxjaAJSNDAJNDSAJSNjanNCjNSDJANCJADCB");
-
+      window.history.pushState(null, '', '/comercial/consultas/dashboard');
       this.messageService.add({
         severity: 'success',
         summary: 'Ingreso',

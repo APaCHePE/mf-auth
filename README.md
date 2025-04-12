@@ -70,5 +70,28 @@ Comando para extraer la estructura de carpetas:
 find . -type f -not -path "*/node_modules/*" -not -path "*/dist/*" -not -path "*/.git/*" -not -path "*/.angular/*" -not -path "*/public/*" | sed 's/[^\/]*\//--/g;s/--/|__/g'
 
 ```
+## Librerias
+
+Se necesita agregar librerias:
+
+```bash
+npm install -D tailwindcss@3
+npm install http-server
+npm i primeicons
+npm install primeng
+npm install @primeng/themes
+
+npm install tailwindcss-primeui
+npm install http-server
+npm install postcss autoprefixer
+npm install @angular/animations
+npm install concurrently
+npm install chart.js
+
+Todo en uno
+npm install tailwindcss@3 http-server primeicons primeng @primeng/themes
+npm install tailwindcss-primeui http-server postcss autoprefixer @angular/animations concurrently
+npx tailwind init
+```
 
 

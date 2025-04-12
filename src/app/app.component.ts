@@ -3,7 +3,6 @@ import { RouterOutlet, Router } from '@angular/router';
 // import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { LoginComponent } from './components/login/login.component';
 // import { LoginComponent } from './features/login/login.component';
-// import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { NgIf } from '@angular/common';
 @Component({

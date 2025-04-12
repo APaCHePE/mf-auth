@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MegaMenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
@@ -8,12 +8,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    MenubarModule,
-    ButtonModule,
-    MegaMenuModule
-  ],
+  imports: [MenubarModule, ButtonModule, MegaMenuModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -22,7 +17,7 @@ export class HeaderComponent implements OnInit {
   menuItems: MenuItem[] = [];
   cdr: any;
 
-  constructor(private router: Router) {}
+  // constructor(private router: Router) {}
 
   model: MegaMenuItem[] = [
     {
@@ -34,36 +29,36 @@ export class HeaderComponent implements OnInit {
               {
                 label: 'Comercial',
                 icon: 'pi pi-fw pi-id-card',
-                routerLink: ['productos/nuevo'],
+                routerLink: ['comercial/consultas/dashboard'],
               },
               {
                 label: 'Operaciones',
                 icon: 'pi pi-fw pi-check-square',
-                routerLink: ['productos/modificar'],
+                routerLink: ['operaciones/reclamos/dashboard'],
               },
-              {
-                label: 'Nuevo',
-                icon: 'pi pi-fw pi-bookmark',
-                routerLink: ['productos/configurar'],
-              },
-              {
-                label: 'Sin función',
-                icon: 'pi pi-fw pi-mobile',
-                routerLink: ['productos/exportar'],
-              },
-              { label: 'File', icon: 'pi pi-fw pi-file', to: '/uikit/file' },
+              // {
+              //   label: 'Nuevo',
+              //   icon: 'pi pi-fw pi-bookmark',
+              //   routerLink: ['comercial/configurar'],
+              // },
+              // {
+              //   label: 'Sin función',
+              //   icon: 'pi pi-fw pi-mobile',
+              //   routerLink: ['comercial/exportar'],
+              // },
+              // { label: 'File', icon: 'pi pi-fw pi-file', to: '/uikit/file' },
             ],
           },
         ],
       ],
     },
   ];
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   logout() {
     sessionStorage.removeItem('idTokenFirebase');
-    this.router.navigate(['/']);
+    window.history.pushState(null, '', '/login');
+    // this.router.navigate(['/']);
     location.reload();
   }
 }
