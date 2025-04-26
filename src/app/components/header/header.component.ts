@@ -1,64 +1,93 @@
 import { Component, OnInit } from '@angular/core';
-// import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MegaMenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { MegaMenuModule } from 'primeng/megamenu';
 import { ButtonModule } from 'primeng/button';
+import { StyleClassModule } from 'primeng/styleclass';
+import { LayoutService } from '../../shared/services/layout.service';
+import { ModuleService } from '../../shared/services/module.service';
+import { ModuleItem } from 'src/app/shared/models/module.model';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MenubarModule, ButtonModule, MegaMenuModule],
+  imports: [MenubarModule, ButtonModule, MegaMenuModule, StyleClassModule],
+  providers: [LayoutService],
   templateUrl: './header.component.html',
+  host: {
+    class: 'layout-topbar',
+  },
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
   items: MenuItem[] = [];
-  menuItems: MenuItem[] = [];
+  menuItems: MegaMenuItem[] = [];
   cdr: any;
 
-  // constructor(private router: Router) {}
+  constructor(
+    private layoutService: LayoutService,
+    private moduleService: ModuleService,
+    private authService: AuthService,
+    private router: Router,
+    private messageService: MessageService
+  ) {
+    this.layoutService.update((cfg) => ({ ...cfg, darkTheme: false }));
+  }
+  ngOnInit() {
+    this.menuItems = this.buildMenuItems(
+      this.moduleService.modulesSubject.value
+    );
 
-  model: MegaMenuItem[] = [
-    {
-      label: 'Módulos',
-      items: [
-        [
-          {
-            items: [
-              {
-                label: 'Comercial',
-                icon: 'pi pi-fw pi-id-card',
-                routerLink: ['comercial/consultas/dashboard'],
-              },
-              {
-                label: 'Operaciones',
-                icon: 'pi pi-fw pi-check-square',
-                routerLink: ['operaciones/reclamos/dashboard'],
-              },
-              // {
-              //   label: 'Nuevo',
-              //   icon: 'pi pi-fw pi-bookmark',
-              //   routerLink: ['comercial/configurar'],
-              // },
-              // {
-              //   label: 'Sin función',
-              //   icon: 'pi pi-fw pi-mobile',
-              //   routerLink: ['comercial/exportar'],
-              // },
-              // { label: 'File', icon: 'pi pi-fw pi-file', to: '/uikit/file' },
-            ],
-          },
-        ],
-      ],
-    },
-  ];
-  ngOnInit() {}
-
+    // Suscribirse a futuros cambios
+    this.moduleService.modules$.subscribe((modules) => {
+      this.menuItems = this.buildMenuItems(modules);
+    });
+    if (
+      this.authService.currentUserValue &&
+      this.moduleService.modulesSubject.value.length === 0
+    ) {
+      this.moduleService.loadModules().subscribe({
+        error: (err) =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error cargando módulos',
+          }),
+      });
+    }
+  }
+  onMenuButtonClick() {
+    this.layoutService.onMenuToggle();
+  }
   logout() {
-    sessionStorage.removeItem('idTokenFirebase');
-    window.history.pushState(null, '', '/login');
-    // this.router.navigate(['/']);
-    location.reload();
+    this.authService.logout();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sesión cerrada',
+      detail: 'Has cerrado sesión correctamente',
+      life: 3000,
+    });
+  }
+  private buildMenuItems(modules: ModuleItem[]): MegaMenuItem[] {
+    return [
+      {
+        label: 'Módulos',
+        items: [
+          [
+            {
+              items: modules.map((module) => ({
+                label: module.name,
+                icon: module.icon,
+                routerLink: [module.route],
+              })),
+            },
+          ],
+        ],
+      },
+    ];
   }
 }

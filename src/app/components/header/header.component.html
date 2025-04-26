@@ -1,8 +1,34 @@
-<div id="header" class="clearfix">
-  <header class="w-full h-16 bg-primary flex items-center justify-between px-6 text-white shadow-md">
-    <div class="text-lg font-bold">Sistema Interno</div>
-    <i class="pi pi-chevron-right"></i>
-    <p-megamenu [model]="model" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu>
-    <p-button pButton type="button" icon="pi pi-power-off" (click)="logout()" class="p-button-sm" iconPos="left"></p-button>
-  </header>
+<div class="layout-topbar flex items-center w-full h-16 justify-between">
+  <div class="layout-topbar-start flex items-center gap-4">
+    <img src="http://localhost:1000/images/avatar/logo.png" alt="Logotipo" class="h-8" />
+    <a class="layout-menu-button" (click)="onMenuButtonClick()">
+      <i class="pi pi-chevron-right"></i>
+    </a>
+  </div>
+
+  <div class="layout-topbar-end relative flex items-center gap-4">
+
+    <p-megamenu [model]="menuItems" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu>
+
+    <a pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden"
+      leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true" class="cursor-pointer">
+      <img src="http://localhost:1000/images/avatar/amyelsner.png" alt="avatar" class="w-8 h-8 rounded-full" />
+    </a>
+    <div class="hidden absolute right-0 top-full mt-2 z-50 w-48 bg-surface-0 shadow-md rounded-md">
+      <ul class="list-none p-2  m-0">
+        <li>
+          <a class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2" pRipple>
+            <i class="pi pi-cog mr-2"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+        <li>
+          <a (click)="logout()" class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2" pRipple>
+            <i class="pi pi-power-off mr-2"></i>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

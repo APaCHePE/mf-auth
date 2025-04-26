@@ -1,15 +1,15 @@
 {
-  "name": "login",
+  "name": "mf-authentication",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build login --configuration production",
+    "build": "ng build mf-authentication --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:login": "node dist/login/server/server.mjs",
-    "build:single-spa:login": "ng build login --configuration production",
-    "serve:single-spa:login": "ng s --project login --disable-host-check --port 1000 --live-reload false"
+    "serve:ssr:mf-authentication": "node dist/mf-authentication/server/server.mjs",
+    "build:single-spa:mf-authentication": "ng build mf-authentication --configuration production",
+    "serve:single-spa:mf-authentication": "ng s --project mf-authentication --disable-host-check --port 1000 --live-reload false"
   },
   "private": true,
   "dependencies": {
