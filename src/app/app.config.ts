@@ -64,6 +64,8 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     getSingleSpaExtraProviders(),
     providePrimeNG({
+      ripple: true,
+      inputStyle: 'filled',
       theme: { preset: MyPreset, options: { darkModeSelector: '.app-dark' } },
     }),
     provideAnimations(),

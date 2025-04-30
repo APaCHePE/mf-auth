@@ -89,8 +89,10 @@ npm install concurrently
 npm install chart.js
 
 Todo en uno
-npm install tailwindcss@3 http-server primeicons primeng @primeng/themes
-npm install tailwindcss-primeui http-server postcss autoprefixer @angular/animations concurrently
+
+create-single-spa
+npm install tailwindcss@3 http-server primeicons primeng @primeng/themes tailwindcss-primeui  postcss autoprefixer @angular/animations concurrently chart.js
+
 npx tailwind init
 ```
 
