@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 @Component({
-  selector: 'app-header',
+  selector: 'app-topbar',
   standalone: true,
   imports: [MenubarModule, ButtonModule, MegaMenuModule, StyleClassModule],
   providers: [LayoutService],
@@ -21,7 +21,11 @@ import { filter } from 'rxjs/operators';
   host: {
     class: 'layout-topbar',
   },
-  styleUrl: './header.component.scss',
+  styles: `
+      :host ::ng-deep .p-overlaybadge .p-badge {
+          outline-width: 0px;
+      }
+  `,
 })
 export class HeaderComponent implements OnInit {
   items: MenuItem[] = [];
@@ -75,7 +79,7 @@ export class HeaderComponent implements OnInit {
   private buildMenuItems(modules: ModuleItem[]): MegaMenuItem[] {
     return [
       {
-        label: 'Módulos',
+        label: 'Móduloss',
         items: [
           [
             {
