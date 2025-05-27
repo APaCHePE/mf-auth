@@ -13,10 +13,8 @@ import { Toast } from 'primeng/toast';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, NgIf, Toast],
   template: `
-    <div class="layout-container">
       <app-topbar *ngIf="showHeader"></app-topbar>
       <router-outlet></router-outlet>
-    </div>
     <p-toast />
   `,
   styleUrl: './app.component.scss',
