@@ -6,20 +6,28 @@ import { filter } from 'rxjs/operators';
 import { navigateToUrl } from 'single-spa';
 import { AuthService } from './shared/services/auth.service';
 import { ModuleService } from './shared/services/module.service';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, NgIf],
+  imports: [RouterOutlet, HeaderComponent, NgIf, Toast],
   template: `
-    <app-header *ngIf="showHeader"></app-header>
-    <router-outlet></router-outlet>
+    <div class="layout-container">
+      <app-topbar *ngIf="showHeader"></app-topbar>
+      <router-outlet></router-outlet>
+    </div>
+    <p-toast />
   `,
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   showHeader = false;
-  constructor(private router: Router, private authService: AuthService, private moduleService: ModuleService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private moduleService: ModuleService
+  ) {}
   ngOnInit(): void {
     this.controlAcceso(window.location.pathname);
 

@@ -61,7 +61,8 @@ export class LoginComponent {
 
     this.loading = true;
     this.messageService.clear();
-
+    console.log('CLICK LOGIN');
+    
     this.authService
       .login(this.credentials)
       .pipe(finalize(() => (this.loading = false)))
