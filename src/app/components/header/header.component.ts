@@ -12,6 +12,9 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { toggleMobileMenu, getLayoutState } from '@test/mf-utils-modules';
+
+
 @Component({
   selector: 'app-topbar',
   standalone: true,
@@ -63,6 +66,10 @@ export class HeaderComponent implements OnInit {
           }),
       });
     }
+  }
+  toggleSidebar(): void {
+    const currentState = getLayoutState().staticMenuMobileActive;
+    toggleMobileMenu(!currentState); // alterna el estado
   }
   onMenuButtonClick() {
     this.layoutService.onMenuToggle();
