@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';  
 import { MenuItem } from 'primeng/api';
 import { MegaMenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
@@ -13,12 +14,20 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { toggleMobileMenu, getLayoutState } from '@test/mf-utils-modules';
+import { SettingComponent } from './components/setting.component';
 
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  imports: [MenubarModule, ButtonModule, MegaMenuModule, StyleClassModule],
+  imports: [
+    CommonModule,
+    MenubarModule,
+    ButtonModule,
+    MegaMenuModule,
+    StyleClassModule,
+    SettingComponent,
+  ],
   providers: [LayoutService],
   templateUrl: './header.component.html',
   host: {
@@ -34,6 +43,7 @@ export class HeaderComponent implements OnInit {
   items: MenuItem[] = [];
   menuItems: MegaMenuItem[] = [];
   cdr: any;
+  showSettings = false;
 
   constructor(
     private layoutService: LayoutService,
@@ -66,6 +76,10 @@ export class HeaderComponent implements OnInit {
           }),
       });
     }
+  }
+
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
   }
   toggleSidebar(): void {
     const currentState = getLayoutState().staticMenuMobileActive;

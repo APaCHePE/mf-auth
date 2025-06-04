@@ -15,7 +15,6 @@ import { appConfig } from './app/app.config';
 
 const lifecycles = singleSpaAngular({
   bootstrapFunction: (singleSpaProps) => {
-    console.log('✅ Ejecutando bootstrapFunction', singleSpaProps);
     singleSpaPropsSubject.next(singleSpaProps);
     return bootstrapApplication(AppComponent, appConfig);
   },

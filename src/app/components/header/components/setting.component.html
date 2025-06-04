@@ -1,0 +1,109 @@
+<p-dialog header="Configuración" [(visible)]="visible" [style]="{ width: '30vw' }" [modal]="true" [closable]="true"
+  (onHide)="closed.emit()">
+  <div class="p-fluid p-formgrid p-grid">
+    <div class="flex flex-col gap-4">
+      <div>
+        <span class="text-lg font-semibold" *ngIf="visibility.enablePrimaryColor">Primary</span>
+        <div class="pt-2 flex gap-2 flex-wrap">
+          @for (primaryColor of primaryColors(); track primaryColor.name) {
+          <button type="button" [title]="primaryColor.name" (click)="updateColors($event, 'primary', primaryColor)"
+            [ngClass]="{
+                'outline-primary': primaryColor.name === selectedPrimaryColor()
+              }"
+            class="cursor-pointer w-6 h-6 rounded-full flex flex-shrink-0 items-center justify-center p-0 outline-none outline-offset-1"
+            [style]="{'background-color': primaryColor?.name === 'noir' ? 'var(--text-color)' : primaryColor?.palette?.['500']}"></button>
+          }
+        </div>
+      </div>
+      <div *ngIf="visibility.enableSurface">
+        <span class="text-lg font-semibold">Surface</span>
+        <div class="pt-2 flex gap-2 flex-wrap">
+          @for (surface of surfaces; track surface.name) {
+          <button type="button" [title]="surface.name" (click)="updateColors($event, 'surface', surface)"
+            class="cursor-pointer w-6 h-6 rounded-full flex flex-shrink-0 items-center justify-center p-0 outline-none outline-offset-1"
+            [ngClass]="{
+                'outline-primary': selectedSurface()
+                  ? selectedSurface() === surface.name
+                  : isDarkTheme()
+                  ? surface.name === 'zinc'
+                  : surface.name === 'slate'
+              }" [style]="{
+                                    'background-color': surface?.palette?.['500']
+                                }"></button>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2" *ngIf="visibility.enableColorScheme">
+        <span class="text-lg font-semibold">Color Scheme</span>
+        <p-selectbutton [(ngModel)]="darkTheme" [options]="themeOptions" optionLabel="name" optionValue="value"
+          [allowEmpty]="false"></p-selectbutton>
+      </div>
+
+      <ng-container *ngIf="visibility.enableMenuMode && !simple">
+        <div class="flex flex-col gap-2">
+          <span class="text-lg font-semibold">Menu Type</span>
+          <div class="flex flex-wrap flex-col gap-3">
+            <ng-container *ngFor="
+                  let row of menuModes | slice : 0 : menuModes.length;
+                  let i = index
+                ">
+              <div class="flex" *ngIf="i % 2 === 0">
+                <div class="flex items-center gap-2 w-1/2" *ngIf="menuModes[i]">
+                  <p-radio-button name="menuMode" [value]="menuModes[i].value" [(ngModel)]="menuMode"
+                    [inputId]="menuModes[i].value"></p-radio-button>
+                  <label [for]="menuModes[i].value">{{
+                      menuModes[i].label
+                    }}</label>
+                </div>
+                <div class="flex items-center gap-2 w-1/2" *ngIf="menuModes[i + 1]">
+                  <p-radio-button name="menuMode" [value]="menuModes[i + 1].value" [(ngModel)]="menuMode"
+                    [inputId]="menuModes[i + 1].value"></p-radio-button>
+                  <label [for]="menuModes[i + 1].value">{{
+                      menuModes[i + 1].label
+                    }}</label>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2" *ngIf="visibility.enableMenuTheme">
+          <span class="text-lg font-semibold">Menu Themes</span>
+          <p *ngIf="isDark; else menu_theme_selector">
+            Menu themes are only available in light mode by design as large
+            surfaces can emit too much brightness in dark mode.
+          </p>
+          <ng-template #menu_theme_selector>
+            <div class="pt-2 flex gap-2 flex-wrap">
+              @for (theme of menuThemes; track theme) {
+              <button type="button"
+                class="cursor-pointer w-6 h-6 rounded-full flex flex-shrink-0 items-center justify-center p-0 outline-none outline-offset-1 shadow"
+                (click)="changeMenuTheme(theme.name)" [ngStyle]="{ 'background-color': theme.color }">
+                <i *ngIf="menuTheme === theme.name" class="pi pi-check text-lg"
+                  [ngClass]="{ 'text-white': menuTheme !== 'light' }"></i>
+              </button>
+              }
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="flex flex-col gap-2" *ngIf="visibility.enableTopbarTheme">
+          <span class="text-lg font-semibold">Topbar Themes</span>
+          <div class="pt-2 flex gap-2 flex-wrap">
+            @for (theme of topbarThemes; track theme) {
+            <button type="button"
+              class="cursor-pointer w-6 h-6 rounded-full flex flex-shrink-0 items-center justify-center p-0 outline-none outline-offset-1 shadow"
+              (click)="changeTopbarTheme(theme.name)" [ngStyle]="{ 'background-color': theme.color }">
+              <i *ngIf="topbarTheme === theme.name" class="pi pi-check text-lg"
+                [ngClass]="{ 'text-white': topbarTheme !== 'light' }"></i>
+            </button>
+            }
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="p-field p-col-12 mt-3">
+      <button pButton type="button" label="Cerrar" (click)="onClose()"></button>
+    </div>
+  </div>
+</p-dialog>

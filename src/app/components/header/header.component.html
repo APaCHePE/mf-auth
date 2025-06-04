@@ -6,30 +6,53 @@
 </div>
 
 <div class="layout-topbar-end">
+  <div class="layout-topbar-actions-start">
+    <p-megamenu [model]="menuItems" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu>
+    <app-setting [visible]="showSettings" (closed)="showSettings = false">
+    </app-setting>
+  </div>
 
-  <p-megamenu [model]="menuItems" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu>
-
-  
-  <a pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden"
-    leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true" class="cursor-pointer">
-    <img src="http://localhost:1000/images/avatar/amyelsner.png" alt="avatar" class="w-8 h-8 rounded-full" />
-  </a>
-  <div class="hidden absolute right-0 top-full mt-2 z-50 w-48 bg-surface-0 shadow-md rounded-md">
-    <ul class="list-none p-2  m-0">
+  <div class="layout-topbar-actions-end">
+    <ul class="layout-topbar-items">
       <li>
-        <a class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2" pRipple>
-          <i class="pi pi-cog mr-2"></i>
-          <span>Settings</span>
+        <a pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden"
+          leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
+          <img src="http://localhost:1000/images/avatar/amyelsner.png" alt="avatar" class="w-8 h-8" />
         </a>
-      </li>
-      <li>
-        <a (click)="logout()" class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2" pRipple>
-          <i class="pi pi-power-off mr-2"></i>
-          <span>Logout</span>
-        </a>
+        <div class="hidden">
+          <ul class="list-none p-0 m-0">
+            <li>
+              <a class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2" (click)="toggleSettings()" pRipple>
+                <i class="pi pi-cog mr-2"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2"
+                pRipple>
+                <i class="pi pi-file-o mr-2"></i>
+                <span>Terms of Usage</span>
+              </a>
+            </li>
+            <li>
+              <a class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2"
+                pRipple>
+                <i class="pi pi-compass mr-2"></i>
+                <span>Support</span>
+              </a>
+            </li> -->
+            <li>
+              <a (click)="logout()"
+                class="cursor-pointer flex items-center hover:bg-emphasis duration-150 transition-all px-4 py-2"
+                pRipple>
+                <i class="pi pi-power-off mr-2"></i>
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
     </ul>
+
   </div>
 </div>
-<!-- <div class="layout-topbar flex items-center w-full h-16 justify-between">
-</div> -->
