@@ -2,8 +2,8 @@
   (onHide)="closed.emit()">
   <div class="p-fluid p-formgrid p-grid">
     <div class="flex flex-col gap-4">
-      <div>
-        <span class="text-lg font-semibold" *ngIf="visibility.enablePrimaryColor">Primary</span>
+      <div *ngIf="visibility.enablePrimaryColor">
+        <span class="text-lg font-semibold">Primary</span>
         <div class="pt-2 flex gap-2 flex-wrap">
           @for (primaryColor of primaryColors(); track primaryColor.name) {
           <button type="button" [title]="primaryColor.name" (click)="updateColors($event, 'primary', primaryColor)"
