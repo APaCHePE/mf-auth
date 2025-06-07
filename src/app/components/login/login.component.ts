@@ -15,6 +15,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { finalize } from 'rxjs/operators';
 import { LoginRequest } from '../../shared/models/auth.model';
 import { ToastModule } from 'primeng/toast';
+import { AuthAPI } from '@test/mf-utils-modules';
 
 @Component({
   selector: 'app-login',
@@ -62,13 +63,33 @@ export class LoginComponent {
     this.loading = true;
     this.messageService.clear();
     console.log('CLICK LOGIN');
-    
-    this.authService
-      .login(this.credentials)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
-        next: () => this.loginSuccess.emit(true),
-        error: () => this.loginSuccess.emit(false),
+
+    AuthAPI.login({
+      username: this.credentials.user,
+      password: this.credentials.password,
+    })
+      .then(() => {
+        this.loginSuccess.emit(true);
+        console.log('Login exitoso');
+        
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Login exitoso',
+        });
+        window.history.pushState(null, '', '/comercial/consultas/dashboard');
+      })
+      .catch(() => {
+        this.loginSuccess.emit(false);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Credenciales inválidas',
+          life: 3000,
+        });
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 }

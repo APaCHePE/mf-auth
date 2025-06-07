@@ -27,6 +27,9 @@ declare module '@test/mf-utils-modules' {
   export function toggleMobileMenu(show: boolean): void;
   export function getLayoutState(): any;
   export function applySurfacePalette(key: string): any;
+  export namespace AuthAPI {
+    function login(data: { username: string; password: string }): Promise<any>;
+  }
 }
 
 declare module '@prisma/mf-shared-ui' {

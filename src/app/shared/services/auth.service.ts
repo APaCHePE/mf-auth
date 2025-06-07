@@ -8,6 +8,7 @@ import { switchMap, tap, map, timeout } from 'rxjs/operators';
 import { ApiResponse } from '../models/api-response.model';
 import { ModuleService } from './module.service';
 import { OptionsService } from './options.service';
+import { AuthAPI } from '@test/mf-utils-modules';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
