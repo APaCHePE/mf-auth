@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';  
+import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MegaMenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
@@ -15,7 +15,6 @@ import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { toggleMobileMenu, getLayoutState } from '@test/mf-utils-modules';
 import { SettingComponent } from './components/setting.component';
-
 
 @Component({
   selector: 'app-topbar',
@@ -55,12 +54,20 @@ export class HeaderComponent implements OnInit {
     this.layoutService.update((cfg) => ({ ...cfg, darkTheme: false }));
   }
   ngOnInit() {
+    console.log(
+      'mostrar buildMenuItems',
+      this.buildMenuItems(this.moduleService.modulesSubject.value)
+    );
+
     this.menuItems = this.buildMenuItems(
       this.moduleService.modulesSubject.value
     );
+    console.log('Módulos cargados:', this.menuItems);
 
     // Suscribirse a futuros cambios
     this.moduleService.modules$.subscribe((modules) => {
+      console.log('Módulos actualizados:', modules);
+
       this.menuItems = this.buildMenuItems(modules);
     });
     if (
@@ -98,21 +105,27 @@ export class HeaderComponent implements OnInit {
     });
   }
   private buildMenuItems(modules: ModuleItem[]): MegaMenuItem[] {
-    return [
-      {
-        label: 'Móduloss',
-        items: [
-          [
-            {
-              items: modules.map((module) => ({
-                label: module.name,
-                icon: module.icon,
-                routerLink: [module.route],
-              })),
-            },
-          ],
-        ],
-      },
-    ];
+    return modules.map((module) => {
+      const menuItem: MegaMenuItem = {
+        label: module.label,
+        icon: module.icon,
+      };
+
+      // Si el módulo tiene hijos, los agrega como submenú
+      if (module.children && module.children.length > 0) {
+        const menuChilds: MenuItem[] = module.children.map((child) => ({
+          label: child.label,
+          icon: child.icon,
+          routerLink: [child.path],
+        }));
+        const padreMenuChild: MenuItem = {
+          label: module.label,
+          items: menuChilds,
+        };
+        menuItem.items = [[padreMenuChild]];
+      }
+
+      return menuItem;
+    });
   }
 }

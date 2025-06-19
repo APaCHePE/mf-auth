@@ -16,7 +16,7 @@ export class OptionsService {
   loadOptions(): Observable<SidebarOption[]> {
     const userId = JSON.parse(sessionStorage.getItem('currentUser') || '{}')?.user?.id;
     const moduleId = JSON.parse(sessionStorage.getItem('currentUser') || '{}')?.default?.idModulo;
-    const sessionId = sessionStorage.getItem('sessionId');
+    const sessionId = sessionStorage.getItem('accessToken');
 
     if (!userId || !sessionId || !moduleId) {
       return throwError(() => new Error('No hay sesión activa'));

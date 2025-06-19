@@ -4,11 +4,12 @@ import { ApiService } from './api.service';
 import { BehaviorSubject, Observable, map, tap, throwError } from 'rxjs';
 import { ModuleItem } from '../models/module.model';
 import { HttpHeaders } from '@angular/common/http';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ModuleService {
   private apiService = inject(ApiService);
-  private readonly STORAGE_KEY = 'cached_modules';
+  private readonly STORAGE_KEY = 'options';
   
   // Subject para almacenar y emitir los módulos
   modulesSubject = new BehaviorSubject<ModuleItem[]>(this.getCachedModules());
@@ -20,27 +21,32 @@ export class ModuleService {
    */
   loadModules(): Observable<ModuleItem[]> {
     // Obtener datos correctamente del sessionStorage
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
-    const userId = currentUser?.user?.id;
-    const sessionId = sessionStorage.getItem('sessionId');
+    // const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    // const userId = currentUser?.user?.idUsuario;
+    // const accessToken = localStorage.getItem('accessToken');
   
-    if (!userId || !sessionId) {
-      return throwError(() => new Error('No hay sesión activa'));
-    }
+    // if (!userId || !accessToken) {
+    //   return throwError(() => new Error('No hay sesión activa'));
+    // }
   
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${sessionId}`
-    });
-  
-    return this.apiService.get<{ modules: ModuleItem[] }>(`getModulos?userId=${userId}`, headers).pipe(
-      tap(response => {
-        if (response.success) {
-          this.cacheModules(response.data.modules);
-          this.modulesSubject.next(response.data.modules);
-        }
-      }),
-      map(response => response.data.modules)
-    );
+    // const headers = new HttpHeaders({
+    //   Authorization: `Bearer ${accessToken}`,
+    // });
+    const options = JSON.parse(sessionStorage.getItem('options') || '[]');
+    console.log('Opciones de menú 1:', options);
+    console.log('Opciones de menú 2:', options.options);
+    this.cacheModules(options.options);
+    this.modulesSubject.next(options.options);
+    return options.options;
+    // return this.apiService.get<{ modules: ModuleItem[] }>(`getModulos?userId=${userId}`, headers).pipe(
+    //   tap(response => {
+    //     if (response.success) {
+          // this.cacheModules(response.data.modules);
+          // this.modulesSubject.next(response.data.modules);
+    //     }
+    //   }),
+    //   map(response => response.data.modules)
+    // );
   }
 
   /**
@@ -48,8 +54,8 @@ export class ModuleService {
    * @returns Array de módulos activos
    */
   getActiveModules(): ModuleItem[] {
-    return this.modulesSubject.value
-      .sort((a, b) => a.order - b.order);
+    return this.modulesSubject.value;
+      // .sort((a, b) => a.order - b.order);
   }
 
   /**
@@ -62,23 +68,29 @@ export class ModuleService {
   }
   private cacheModules(modules: ModuleItem[]): void {
     try {
-      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify({
-        modules,
-        timestamp: new Date().getTime()
-      }));
+      console.log('Caching modules seteo de items:', modules);
+      
+      // sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify({
+      //   modules,
+      //   timestamp: new Date().getTime()
+      // }));
     } catch (e) {
       console.error('Error caching modules', e);
     }
   }
   private getCachedModules(): ModuleItem[] {
     const cachedData = sessionStorage.getItem(this.STORAGE_KEY);
+    
     if (!cachedData) return [];
 
     try {
-      const { modules, timestamp } = JSON.parse(cachedData);
+      // const { modules, timestamp } = JSON.parse(cachedData);
+      const cachedDataParse = JSON.parse(cachedData || '[]');
+      console.log('Cached modules data:', cachedDataParse);
       // Opcional: Validar antigüedad del cache (ej. 1 hora)
-      const isCacheValid = new Date().getTime() - timestamp < 3600000;
-      return isCacheValid ? modules : [];
+      // const isCacheValid = new Date().getTime() - timestamp < 3600000;
+      // return isCacheValid ? modules : [];
+      return cachedDataParse;
     } catch (e) {
       console.error('Error parsing cached modules', e);
       return [];

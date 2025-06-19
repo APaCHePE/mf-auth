@@ -67,6 +67,7 @@ export class AuthService {
   }
 
   public logout(): void {
+    localStorage.clear();
     sessionStorage.clear();
     this.moduleService.clearCache();
     this.currentUserSubject.next(null);
@@ -82,7 +83,7 @@ export class AuthService {
   }
   private loadInitialData(): Observable<void> {
     return new Observable<void>(observer => {
-      const sessionId = sessionStorage.getItem('sessionId');
+      const sessionId = sessionStorage.getItem('accessToken');
       
       if (!sessionId) {
         observer.error(new Error('No hay sesión activa'));

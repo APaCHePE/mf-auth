@@ -61,6 +61,6 @@ export class AppComponent {
     );
   }
   private isAuthenticated = (): boolean => {
-    return !!sessionStorage.getItem('sessionId');
+    return !!localStorage.getItem('accessToken');
   };
 }

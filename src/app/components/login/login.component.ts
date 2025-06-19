@@ -15,7 +15,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { finalize } from 'rxjs/operators';
 import { LoginRequest } from '../../shared/models/auth.model';
 import { ToastModule } from 'primeng/toast';
-import { AuthAPI } from '@test/mf-utils-modules';
+import { AuthAPI, OptionsAPI, JwtUtils, Session, StorageConstants } from '@test/mf-utils-modules';
 
 @Component({
   selector: 'app-login',
@@ -41,9 +41,7 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
 
-  @Output() loginSuccess = new EventEmitter<boolean>();
-
-  credentials: LoginRequest = { user: '', password: '' };
+  credentials: LoginRequest = { user: 'liam2012', password: 'ClaveSegura' };
   loading = false;
 
   email!: string;
@@ -59,28 +57,55 @@ export class LoginComponent {
       });
       return;
     }
-
     this.loading = true;
     this.messageService.clear();
-    console.log('CLICK LOGIN');
 
     AuthAPI.login({
       username: this.credentials.user,
       password: this.credentials.password,
     })
-      .then(() => {
-        this.loginSuccess.emit(true);
-        console.log('Login exitoso');
-        
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Login exitoso',
-        });
-        window.history.pushState(null, '', '/comercial/consultas/dashboard');
+      .then((data) => {
+        const user = JwtUtils.decodeJWT(data.access_token || '');
+        const userId = user?.user?.idUsuario;
+
+        if (userId && data.access_token) {
+          OptionsAPI.getUserOptions(userId, data.access_token)
+            .then((response) => {
+              console.log('Opciones de menú:', response.data);
+              console.log('Token de acceso 1:', StorageConstants.MODULE_KEYS);
+              console.log(
+                'Token de acceso 2:',
+                StorageConstants.MODULE_KEYS.USER_OPTIONS
+              );
+              
+              Session.set(
+                StorageConstants.MODULE_KEYS.USER_OPTIONS,
+                response.data.options
+              );
+              console.log(
+                'Token de acceso 3:',
+                Session.get(StorageConstants.MODULE_KEYS.USER_OPTIONS)
+              );
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: 'Login exitoso',
+              });
+              window.history.pushState(
+                null,
+                '',
+                '/comercial/consultas/dashboard'
+              );
+              setTimeout(() => {
+                window.location.reload();
+              }, 200);
+            })
+            .catch((err) => {
+              console.error('Error al obtener el menú:', err);
+            });
+        }
       })
       .catch(() => {
-        this.loginSuccess.emit(false);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -93,4 +118,3 @@ export class LoginComponent {
       });
   }
 }
-
