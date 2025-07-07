@@ -54,20 +54,7 @@ export class HeaderComponent implements OnInit {
     this.layoutService.update((cfg) => ({ ...cfg, darkTheme: false }));
   }
   ngOnInit() {
-    console.log(
-      'mostrar buildMenuItems',
-      this.buildMenuItems(this.moduleService.modulesSubject.value)
-    );
-
-    this.menuItems = this.buildMenuItems(
-      this.moduleService.modulesSubject.value
-    );
-    console.log('Módulos cargados:', this.menuItems);
-
-    // Suscribirse a futuros cambios
     this.moduleService.modules$.subscribe((modules) => {
-      console.log('Módulos actualizados:', modules);
-
       this.menuItems = this.buildMenuItems(modules);
     });
     if (
@@ -90,10 +77,7 @@ export class HeaderComponent implements OnInit {
   }
   toggleSidebar(): void {
     const currentState = getLayoutState().staticMenuMobileActive;
-    toggleMobileMenu(!currentState); // alterna el estado
-  }
-  onMenuButtonClick() {
-    this.layoutService.onMenuToggle();
+    toggleMobileMenu(!currentState); // Alterna el estado
   }
   logout() {
     this.authService.logout();
@@ -104,28 +88,47 @@ export class HeaderComponent implements OnInit {
       life: 3000,
     });
   }
-  private buildMenuItems(modules: ModuleItem[]): MegaMenuItem[] {
-    return modules.map((module) => {
+  private buildMenuItems(modules: any[]) {
+    const menuItems = modules.map((module) => {
       const menuItem: MegaMenuItem = {
         label: module.label,
         icon: module.icon,
       };
-
       // Si el módulo tiene hijos, los agrega como submenú
       if (module.children && module.children.length > 0) {
-        const menuChilds: MenuItem[] = module.children.map((child) => ({
+        const menuChilds: MenuItem[] = module.children.map((child: any) => ({
           label: child.label,
-          icon: child.icon,
           routerLink: [child.path],
+          command() {
+            window.dispatchEvent(
+              new CustomEvent('module-selected', {
+                detail: {
+                  idModulo: module.idmodulo?.toString(),
+                },
+              })
+            );
+          },
         }));
-        const padreMenuChild: MenuItem = {
-          label: module.label,
-          items: menuChilds,
-        };
-        menuItem.items = [[padreMenuChild]];
+        const childBlocks = this.splitIntoBlocks(menuChilds, 10);
+        const padresMenuChild: MenuItem[][] = childBlocks.map((block) => [
+          {
+            label: module.label,
+            items: block,
+          },
+        ]);
+        menuItem.items = padresMenuChild;
       }
 
       return menuItem;
     });
+    console.log('menuItems', JSON.stringify(menuItems));
+    return menuItems;
+  }
+  private splitIntoBlocks<T>(array: T[], blockSize: number): T[][] {
+    const blocks: T[][] = [];
+    for (let i = 0; i < array.length; i += blockSize) {
+      blocks.push(array.slice(i, i + blockSize));
+    }
+    return blocks;
   }
 }

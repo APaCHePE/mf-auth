@@ -25,10 +25,8 @@ export class AuthService {
     user: string;
     password: string;
   }): Observable<ApiResponse<LoginResponseData>> {
-    console.log('MOSTRANDO PREVIEW');
     return this.apiService.post<LoginResponseData>('login', credentials).pipe(
       switchMap((response) => {
-        console.log('MOSTRANDO RESPONSE',response);
         if (!response.success) {
           return throwError(() => new Error(response.message || 'Login failed'));
         }

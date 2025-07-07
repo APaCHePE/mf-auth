@@ -23,14 +23,14 @@ export class OptionsService {
     }
 
     // Verificar cache primero
-    const cachedOptions = this.getCachedOptions();
-    if (cachedOptions.length > 0) {
-      this.optionsSubject.next(cachedOptions);
-      return new Observable(observer => {
-        observer.next(cachedOptions);
-        observer.complete();
-      });
-    }
+    // const cachedOptions = this.getCachedOptions();
+    // if (cachedOptions.length > 0) {
+    //   this.optionsSubject.next(cachedOptions);
+    //   return new Observable(observer => {
+    //     observer.next(cachedOptions);
+    //     observer.complete();
+    //   });
+    // }
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${sessionId}`

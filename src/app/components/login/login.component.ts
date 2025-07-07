@@ -11,10 +11,9 @@ import { CommonModule } from '@angular/common';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { LayoutService } from '../../shared/services/layout.service';
-import { AuthService } from '../../shared/services/auth.service';
-import { finalize } from 'rxjs/operators';
 import { LoginRequest } from '../../shared/models/auth.model';
 import { ToastModule } from 'primeng/toast';
+import { ModuleService } from '../../shared/services/module.service';
 import { AuthAPI, OptionsAPI, JwtUtils, Session, StorageConstants } from '@test/mf-utils-modules';
 
 @Component({
@@ -37,9 +36,8 @@ import { AuthAPI, OptionsAPI, JwtUtils, Session, StorageConstants } from '@test/
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  private layoutService = inject(LayoutService);
-  private authService = inject(AuthService);
   private messageService = inject(MessageService);
+  private moduleService = inject(ModuleService);
 
   credentials: LoginRequest = { user: 'liam2012', password: 'ClaveSegura' };
   loading = false;
@@ -66,39 +64,34 @@ export class LoginComponent {
     })
       .then((data) => {
         const user = JwtUtils.decodeJWT(data.access_token || '');
-        const userId = user?.user?.idUsuario;
+        const { idUsuario, sedeDefault, sistemaDefault, moduloDefault } = user?.user;
 
-        if (userId && data.access_token) {
-          OptionsAPI.getUserOptions(userId, data.access_token)
+        if (idUsuario && data.access_token) {
+          OptionsAPI.getUserOptions(idUsuario, data.access_token)
             .then((response) => {
-              console.log('Opciones de menú:', response.data);
-              console.log('Token de acceso 1:', StorageConstants.MODULE_KEYS);
-              console.log(
-                'Token de acceso 2:',
-                StorageConstants.MODULE_KEYS.USER_OPTIONS
-              );
-              
-              Session.set(
-                StorageConstants.MODULE_KEYS.USER_OPTIONS,
-                response.data.options
-              );
-              console.log(
-                'Token de acceso 3:',
-                Session.get(StorageConstants.MODULE_KEYS.USER_OPTIONS)
-              );
+              const options = response.data.options;
+              Session.set(StorageConstants.MODULE_KEYS.USER_OPTIONS, options);
+              this.moduleService.updateModules(options);
+
               this.messageService.add({
                 severity: 'success',
                 summary: 'Éxito',
                 detail: 'Login exitoso',
               });
-              window.history.pushState(
-                null,
-                '',
-                '/comercial/consultas/dashboard'
-              );
-              setTimeout(() => {
-                window.location.reload();
-              }, 200);
+              // Aqui se debe agregar la logica de redirigir al dashboard default
+
+              options.forEach((item:any) => {
+                if (item.idmodulo == moduloDefault) {
+                  let pathDefault = item.children[0].path;
+                  item.children.forEach((subItem: any) => {
+                    if (subItem.isDefault) {
+                      pathDefault = subItem.path;
+                    }
+                  });
+                  window.history.pushState(null, '', pathDefault);
+                }
+              });
+
             })
             .catch((err) => {
               console.error('Error al obtener el menú:', err);
