@@ -7,7 +7,8 @@
 
 <div class="layout-topbar-end">
   <div class="layout-topbar-actions-start">
-    <p-megamenu [model]="menuItems" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu>
+    <!-- <p-megamenu [model]="menuItems" styleClass="layout-megamenu" breakpoint="0px"></p-megamenu> -->
+    <p-menubar [model]="items" styleClass="layout-megamenu"></p-menubar>
     <app-setting [visible]="showSettings" (closed)="showSettings = false"></app-setting>
   </div>
 

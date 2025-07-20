@@ -32,7 +32,7 @@ declare module '@test/mf-utils-modules' {
     function login(data: { username: string; password: string }): Promise<any>;
   }
   export namespace OptionsAPI {
-    function getUserOptions(userId: string, token: string): Promise<any>;
+    function getUserOptions(userId: string, idSistema: string, token: string): Promise<any>;
   }
   export namespace JwtUtils {
     function decodeJWT(token: string): any;

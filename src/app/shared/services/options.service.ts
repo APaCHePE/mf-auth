@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject, Observable, throwError, tap, map } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { MenuItem } from 'primeng/api';
 import { SidebarOption, OptionsResponse } from '../models/option.model';
 
 @Injectable({ providedIn: 'root' })

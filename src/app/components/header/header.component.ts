@@ -55,7 +55,7 @@ export class HeaderComponent implements OnInit {
   }
   ngOnInit() {
     this.moduleService.modules$.subscribe((modules) => {
-      this.menuItems = this.buildMenuItems(modules);
+      this.items = this.buildMenuItems(modules);
     });
     if (
       this.authService.currentUserValue &&
@@ -88,42 +88,97 @@ export class HeaderComponent implements OnInit {
       life: 3000,
     });
   }
-  private buildMenuItems(modules: any[]) {
-    const menuItems = modules.map((module) => {
-      const menuItem: MegaMenuItem = {
-        label: module.label,
-        icon: module.icon,
-      };
-      // Si el módulo tiene hijos, los agrega como submenú
-      if (module.children && module.children.length > 0) {
-        const menuChilds: MenuItem[] = module.children.map((child: any) => ({
+  private buildMenuItems(modules: any[]): MenuItem[] {
+    // Función recursiva para construir los hijos
+    const buildChildren = (children: any[], idModulo: any): MenuItem[] => {
+      // Si no hay hijos, retorna un array vacío
+      return children.map((child: any) => {
+        const item: MenuItem = {
           label: child.label,
-          routerLink: [child.path],
-          command() {
+          icon: child.icon,
+          ...(child.path && child.path.length > 4 && { routerLink: [child.path] }),
+          ...(child.children && child.children.length > 0
+            ? { items: buildChildren(child.children, idModulo) }
+            : {}),
+        };
+        // Solo agrega command si tiene routerLink
+        if (child.path && child.path.length > 4) {
+          item.command = () => {
             window.dispatchEvent(
               new CustomEvent('module-selected', {
-                detail: {
-                  idModulo: module.idmodulo?.toString(),
-                },
+                detail: { idModulo: idModulo },
               })
             );
-          },
-        }));
-        const childBlocks = this.splitIntoBlocks(menuChilds, 10);
-        const padresMenuChild: MenuItem[][] = childBlocks.map((block) => [
-          {
-            label: module.label,
-            items: block,
-          },
-        ]);
-        menuItem.items = padresMenuChild;
-      }
+          };
+        }
+        return item;
+      });
+    };
 
-      return menuItem;
+    // Construir el menú principal
+    return modules.map((module) => {
+      const item: MenuItem = {
+        label: module.label,
+        icon: module.icon,
+        ...(module.children && module.children.length > 0
+          ? {
+              items: buildChildren(
+                module.children,
+                module.idmodulo?.toString()
+              ),
+            }
+          : {}),
+      };
+      // Si el módulo principal tiene path, también puede tener command
+      if (module.path && module.path.length > 4) {
+        item.routerLink = [module.path];
+        item.command = () => {
+          window.dispatchEvent(
+            new CustomEvent('module-selected', {
+              detail: { idModulo: module.idmodulo?.toString() },
+            })
+          );
+        };
+      }
+      return item;
     });
-    console.log('menuItems', JSON.stringify(menuItems));
-    return menuItems;
   }
+  // private buildMenuItems(modules: any[]) {
+  //   const menuItems = modules.map((module) => {
+  //     const menuItem: MegaMenuItem = {
+  //       label: module.label,
+  //       icon: module.icon,
+  //     };
+  //     // Si el módulo tiene hijos, los agrega como submenú
+  //     if (module.children && module.children.length > 0) {
+  //       const menuChilds: MenuItem[] = module.children.map((child: any) => ({
+  //         label: child.label,
+  //         routerLink: [child.path],
+  //         command() {
+  //           window.dispatchEvent(
+  //             new CustomEvent('module-selected', {
+  //               detail: {
+  //                 idModulo: module.idmodulo?.toString(),
+  //               },
+  //             })
+  //           );
+  //         },
+  //       }));
+  //       const childBlocks = this.splitIntoBlocks(menuChilds, 10);
+  //       const padresMenuChild: MenuItem[][] = childBlocks.map((block) => [
+  //         {
+  //           label: module.label,
+  //           items: block,
+  //         },
+  //       ]);
+  //       menuItem.items = padresMenuChild;
+  //     }
+
+  //     return menuItem;
+  //   });
+  //   console.log('menuItems', JSON.stringify(menuItems));
+  //   return menuItems;
+  // }
   private splitIntoBlocks<T>(array: T[], blockSize: number): T[][] {
     const blocks: T[][] = [];
     for (let i = 0; i < array.length; i += blockSize) {

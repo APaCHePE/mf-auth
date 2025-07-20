@@ -67,7 +67,7 @@ export class LoginComponent {
         const { idUsuario, sedeDefault, sistemaDefault, moduloDefault } = user?.user;
 
         if (idUsuario && data.access_token) {
-          OptionsAPI.getUserOptions(idUsuario, data.access_token)
+          OptionsAPI.getUserOptions(idUsuario, sistemaDefault, data.access_token)
             .then((response) => {
               const options = response.data.options;
               Session.set(StorageConstants.MODULE_KEYS.USER_OPTIONS, options);
